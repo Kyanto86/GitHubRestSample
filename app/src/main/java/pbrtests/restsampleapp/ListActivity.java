@@ -11,5 +11,6 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         //test
+        //test
     }
 }
