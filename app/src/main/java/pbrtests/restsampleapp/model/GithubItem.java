@@ -26,6 +26,10 @@ public class GithubItem {
         return name;
     }
 
+    public String getLogin (){ return getOwner().getLogin();}
+
+    public String getAvatarUrl(){ return getOwner().getAvatar_url(); }
+
     public Owner getOwner() {
         return owner;
     }

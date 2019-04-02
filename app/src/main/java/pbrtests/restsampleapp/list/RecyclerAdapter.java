@@ -1,4 +1,4 @@
-package pbrtests.restsampleapp.model;
+package pbrtests.restsampleapp.list;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import pbrtests.restsampleapp.R;
+import pbrtests.restsampleapp.model.GithubItem;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -58,13 +59,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
         itemViewHolder.tv_name.setText(mItemList.get(position).getName());
-        itemViewHolder.tv_creator.setText(mItemList.get(position).getOwner().getLogin());
+        itemViewHolder.tv_creator.setText(mItemList.get(position).getLogin());
         itemViewHolder.tv_date.setText(dateFormatter(mItemList.get(position).getCreated_at()));
         itemViewHolder.tv_description.setText(mItemList.get(position).getDescription());
 
         //Use Glide library to convert url link of image to ImageView.
         Glide.with(mContext)
-                .load(mItemList.get(position).getOwner().getAvatar_url())
+                .load(mItemList.get(position).getAvatarUrl())
                 .into(itemViewHolder.iv_avatar);
     }
 

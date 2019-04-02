@@ -1,4 +1,4 @@
-package pbrtests.restsampleapp;
+package pbrtests.restsampleapp.list;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import pbrtests.restsampleapp.MainActivity;
+import pbrtests.restsampleapp.R;
 import pbrtests.restsampleapp.model.GithubItem;
 import pbrtests.restsampleapp.model.GithubRestAdapter;
-import pbrtests.restsampleapp.model.RecyclerAdapter;
 import pbrtests.restsampleapp.model.RetrofitModule;
 import retrofit2.Call;
 import retrofit2.Callback;
