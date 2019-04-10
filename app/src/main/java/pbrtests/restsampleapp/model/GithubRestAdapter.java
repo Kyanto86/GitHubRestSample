@@ -2,6 +2,7 @@ package pbrtests.restsampleapp.model;
 
 import java.util.List;
 
+import pbrtests.restsampleapp.util.UrlManager;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;

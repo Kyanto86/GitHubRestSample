@@ -1,19 +1,20 @@
 package pbrtests.restsampleapp.list;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
 
-import pbrtests.restsampleapp.MainActivity;
+import pbrtests.restsampleapp.LoginActivity;
 import pbrtests.restsampleapp.R;
+import pbrtests.restsampleapp.databinding.ActivityListBinding;
 import pbrtests.restsampleapp.model.GithubItem;
 import pbrtests.restsampleapp.model.GithubRestAdapter;
+import pbrtests.restsampleapp.model.ListViewModel;
 import pbrtests.restsampleapp.model.RetrofitModule;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,33 +25,34 @@ public class ListActivity extends AppCompatActivity {
 
     private static final String TAG = "ListActivity";
 
-    RecyclerView recyclerView;
-
+    ActivityListBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_list);
+
+        //attach listVM to dataBinding
+        ListViewModel listViewModel = new ListViewModel();
+        mBinding.setListViewModel(listViewModel);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
         String user = getIntent().getExtras().getString("USER");
-        recyclerView = findViewById(R.id.rv_list_activity);
-        final RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerAdapter);
 
         Log.d(TAG, "onCreate: user: " + user);
 
-
-        /*The below shouldn't be in an activity, but the purpose was to make a Retrofit example and try it out.*/
-
         //Create Retrofit
         Retrofit retrofit = new RetrofitModule().provideRetrofit();
-        //create adapter with retrofit (includes GET Methods)
+        //create REST adapter with retrofit (includes GET Methods)
         GithubRestAdapter restAdapter = new GithubRestAdapter(retrofit);
         Call<List<GithubItem>> listCall = restAdapter.getGithubItems(user);
+
+        //call list
+        apiListCall(listCall);
+
+    }
+
+    private void apiListCall(Call<List<GithubItem>> listCall){
 
         //enqueue ensures that call is handled on background thread.
         listCall.enqueue(new Callback<List<GithubItem>>() {
@@ -62,14 +64,13 @@ public class ListActivity extends AppCompatActivity {
 
                     Toast.makeText(ListActivity.this, "Failed response code: " + response.code(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onResponse: " + response.code());
-                    startMainActivity();
+                    startLoginActivity();
                     //prevent NullException
                     return;
                 }
 
-                //get Item lists and send them to recyclerview. Separate, so it's easier to see that response.body returns list.
-                List<GithubItem> items = response.body();
-                recyclerAdapter.updateAdapter(items);
+                onRestPositiveResponse(response);
+
             }
 
             //Failed to connect
@@ -78,15 +79,22 @@ public class ListActivity extends AppCompatActivity {
 
                 Toast.makeText(ListActivity.this, "Failure: " +t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: " + t.getMessage());
-                startMainActivity();
+                startLoginActivity();
             }
         });
-
     }
 
-    private void startMainActivity(){
+    private void onRestPositiveResponse (Response<List<GithubItem>> response){
 
-        Intent intent = new Intent(ListActivity.this, MainActivity.class);
+        //get Item lists and set it onto binding. This should refresh the listadapter.
+        List<GithubItem> items = response.body();
+        mBinding.setGithubItems(items);
+        mBinding.getListViewModel().setListVisibility(true);
+    }
+
+    private void startLoginActivity(){
+
+        Intent intent = new Intent(ListActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

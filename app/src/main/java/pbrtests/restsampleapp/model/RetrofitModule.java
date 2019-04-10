@@ -2,6 +2,7 @@ package pbrtests.restsampleapp.model;
 
 import okhttp3.OkHttpClient;
 import pbrtests.restsampleapp.errorHandling.ErrorInterceptor;
+import pbrtests.restsampleapp.util.UrlManager;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

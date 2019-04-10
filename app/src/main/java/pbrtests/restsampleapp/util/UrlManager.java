@@ -1,4 +1,4 @@
-package pbrtests.restsampleapp.model;
+package pbrtests.restsampleapp.util;
 
 public class UrlManager {
 
